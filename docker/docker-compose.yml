@@ -1,0 +1,80 @@
+version: '2'
+services:
+  sonarqube:
+    image: sonarqube:7.1
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+    networks:
+      - teamcity-network
+
+  server:
+    image: jetbrains/teamcity-server:2018.1.3
+    restart: always
+    ports:
+      - "8111:8111"
+    volumes:
+      - /data/teamcity_server/datadir:/data/teamcity_server/datadir
+      - /opt/teamcity/logs:/opt/teamcity/logs
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - teamcity-network
+
+  agent:
+    image: jetbrains/teamcity-agent:2018.1.3
+    restart: always
+    volumes:
+      - /data/teamcity_agent/conf:/data/teamcity_agent/conf
+      - /opt/buildagent/work:/opt/buildagent/work
+      - /opt/buildagent/temp:/opt/buildagent/temp
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /usr/lib/jvm/jdk:/usr/lib/jvm/jdk
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    environment:
+      - SERVER_URL=server:8111
+      - SONAR_URL=http://sonarqube:9000
+    networks:
+      - teamcity-network
+
+  agent2:
+    image: jetbrains/teamcity-agent
+    restart: always
+    volumes:
+      - /data/teamcity_agent2/conf:/data/teamcity_agent/conf
+      - /opt/buildagent/work:/opt/buildagent/work
+      - /opt/buildagent/temp:/opt/buildagent/temp
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /usr/lib/jvm/jdk:/usr/lib/jvm/jdk
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    environment:
+      - SERVER_URL=server:8111
+      - SONAR_URL=http://sonarqube:9000
+    networks:
+      - teamcity-network
+
+  agent3:
+    image: jetbrains/teamcity-agent
+    restart: always
+    volumes:
+      - /data/teamcity_agent3/conf:/data/teamcity_agent/conf
+      - /opt/buildagent/work:/opt/buildagent/work
+      - /opt/buildagent/temp:/opt/buildagent/temp
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /usr/lib/jvm/jdk:/usr/lib/jvm/jdk
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    environment:
+      - SERVER_URL=server:8111
+      - SONAR_URL=http://sonarqube:9000
+    networks:
+      - teamcity-network
+
+networks:
+  teamcity-network:
