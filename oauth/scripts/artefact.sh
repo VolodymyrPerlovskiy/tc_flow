@@ -2,7 +2,7 @@
 echo "Update OS repo"
 apt update && apt-get -f install sshpass
 # Add a user to Linux system
-adduser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password --force-badname
+adduser %env.username% --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password --force-badname
 echo "Switch user"
 su - %env.username% -c 'rm -f /home/%env.username%/.ssh/*'
 echo "Generate key pair"
@@ -25,7 +25,7 @@ mkdir -p /home/%env.username%/%env.project%/%env.branch%/public
 ENDSSH
 echo "Secure copy artefact to ENV server"
 su - %env.username% -c 'scp -rp "%teamcity.build.checkoutDir%/assembly/%env.app_name%/"'*'".jar" %env.username%@%env.deployment_server%:"/home/%env.username%/%env.project%/%env.branch%"'
-su - %env.username% -c 'scp -rp "/opt/buildagent/work/auth.sh" %env.username%@%env.deployment_server%:"/home/%env.username%/%env.project%/%env.branch%"'
+su - %env.username% -c 'scp -rp "/opt/buildagent/work" %env.username%@%env.deployment_server%:"/home/%env.username%/%env.project%/%env.branch%"'
 su - %env.username% -c 'scp -rp "%teamcity.build.checkoutDir%/config" %env.username%@%env.deployment_server%:"/home/%env.username%/%env.project%/%env.branch%/"'
 su - %env.username% -c 'scp -rp "%teamcity.build.checkoutDir%/public" %env.username%@%env.deployment_server%:"/home/%env.username%/%env.project%/%env.branch%/"'
 echo "Move artifact and config files into target directory"
