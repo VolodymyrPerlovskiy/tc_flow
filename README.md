@@ -1,1 +1,1 @@
-# tc_flow
+# Declarative pipline for TeamCity located in folder .teamcity/settings.kts
